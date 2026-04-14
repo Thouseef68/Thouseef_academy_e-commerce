@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
-  const navigate = useNavigate();
+  
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -13,48 +13,53 @@ const Login = () => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    console.log("🚀 handleSubmit RUNNING");
     if (e) e.preventDefault();
-    
-    // --- DIAGNOSTIC CHECKPOINTS ---
-    console.log("✅ FORM SUBMIT TRIGGERED", form);
-    
-    // Clear old session for a fresh start
-    
+    console.log("🚀 HANDLE SUBMIT STARTED");
+
     setLoading(true);
 
     const urlPath = isLogin ? "/login" : "/register";
-    console.log("MODE:", isLogin ? "LOGIN" : "REGISTER");
     const apiEndpoint = `https://thouseef-academy-e-commerce.onrender.com/api/auth${urlPath}`;
 
-    alert("🟡 Checkpoint 2: Calling API at: " + apiEndpoint);
-
     try {
+      console.log("🌐 Calling API:", apiEndpoint);
+
       const res = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
-      alert("🔵 Checkpoint 3: Server responded with status: " + res.status);
+      console.log("📡 RESPONSE STATUS:", res.status);
 
       const data = await res.json();
-      
+      console.log("📦 RESPONSE DATA:", data);
+
       if (res.ok) {
-        alert("✅ Checkpoint 4: SUCCESS! User data received.");
-        
-        // Save user email to localStorage for orders/tracking
+        // 1. Identify the user email correctly
         const userEmail = data.user ? data.user.email : form.email;
-        localStorage.setItem("userEmail", userEmail);
         
-        alert(isLogin ? "Login Successful!" : "Registration Successful!");
-        navigate("/"); 
+        // 2. Save to localStorage (The Backpack)
+        localStorage.setItem("userEmail", userEmail);
+        localStorage.setItem("activeUser", JSON.stringify({
+          name: form.name || userEmail.split('@')[0],
+          email: userEmail
+        }));
+
+        console.log("✅ SUCCESS - User saved to storage");
+        
+        // 3. Show a quick confirmation alert
+        alert(isLogin ? "Login Successful!" : "Account Created!");
+
+        // 4. THE FIX: Force a redirect and refresh to clear the "sticky" page
+        window.location.href = "/"; 
       } else {
-        alert("❌ Checkpoint 5: SERVER REJECTED DATA - " + (data.msg || data.message || "Unknown error"));
+        console.log("❌ SERVER ERROR:", data);
+        alert(data.msg || "Authentication failed. Check your credentials.");
       }
     } catch (err) {
-      alert("🛑 Checkpoint 6: CONNECTION FAILED - " + err.message);
-      console.error("Critical Connection Error:", err);
+      console.error("❌ FETCH ERROR:", err);
+      alert("Cannot reach the server. Please check your internet or Render logs.");
     } finally {
       setLoading(false);
     }
@@ -71,7 +76,7 @@ const Login = () => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f172a] font-sans overflow-hidden p-4 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f172a] font-sans overflow-hidden p-4 relative text-white">
       
       {/* BACKGROUND ELEMENTS (GLOWS) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -97,11 +102,11 @@ const Login = () => {
             <User size={50} className="text-white opacity-90" />
           </motion.div>
 
-          <h2 className="text-4xl font-black text-white mb-10 tracking-tight text-center">
-            {isLogin ? "Welcome Back" : "Create Account"}
+          <h2 className="text-4xl font-black text-white mb-10 tracking-tight text-center uppercase italic">
+            {isLogin ? "Authorized Entry" : "New Operative"}
           </h2>
 
-          <form onSubmit={(e) => e.preventDefault()} className="w-full space-y-5">
+          <form onSubmit={handleSubmit} className="w-full space-y-5">
             <AnimatePresence mode="wait">
               {!isLogin && (
                 <motion.input
@@ -114,7 +119,7 @@ const Login = () => {
                   required
                   value={form.name}
                   onChange={handleChange}
-                  className="w-full px-7 py-4 rounded-2xl bg-white/5 border border-white/10 text-white focus:border-pink-500 focus:bg-white/10 outline-none transition-all placeholder:text-gray-500 text-sm"
+                  className="w-full px-7 py-4 rounded-2xl bg-white/5 border border-white/10 text-white focus:border-cyan-500 focus:bg-white/10 outline-none transition-all placeholder:text-gray-500 text-sm"
                 />
               )}
             </AnimatePresence>
@@ -126,7 +131,7 @@ const Login = () => {
               required
               value={form.email}
               onChange={handleChange}
-              className="w-full px-7 py-4 rounded-2xl bg-white/5 border border-white/10 text-white focus:border-pink-500 focus:bg-white/10 outline-none transition-all placeholder:text-gray-500 text-sm"
+              className="w-full px-7 py-4 rounded-2xl bg-white/5 border border-white/10 text-white focus:border-cyan-500 focus:bg-white/10 outline-none transition-all placeholder:text-gray-500 text-sm"
             />
 
             <div className="relative">
@@ -137,7 +142,7 @@ const Login = () => {
                 required
                 value={form.password}
                 onChange={handleChange}
-                className="w-full px-7 py-4 rounded-2xl bg-white/5 border border-white/10 text-white focus:border-pink-500 focus:bg-white/10 outline-none transition-all placeholder:text-gray-500 text-sm"
+                className="w-full px-7 py-4 rounded-2xl bg-white/5 border border-white/10 text-white focus:border-cyan-500 focus:bg-white/10 outline-none transition-all placeholder:text-gray-500 text-sm"
               />
               <button 
                 type="button"
@@ -149,32 +154,28 @@ const Login = () => {
             </div>
 
             <motion.button
-              type="button"
-              onClick={(e) => {
-                console.log("🔥 BUTTON CLICKED");
-                handleSubmit(e);
-              }} // 🚀 CRITICAL FIX: Ensures the form actually submits
+              type="submit" // 🚀 Pattern Fix: Using standard submit type
               animate={floatAnim(0.5)}
               whileHover={{ 
                 scale: 1.05, 
                 y: -5,
-                boxShadow: "0px 20px 40px rgba(236, 72, 153, 0.4)"
+                boxShadow: "0px 20px 40px rgba(0, 242, 255, 0.3)"
               }}
               whileTap={{ scale: 0.95 }}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl transition-all mt-8 tracking-[0.15em] text-sm uppercase"
+              className="w-full bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white font-black py-5 rounded-2xl shadow-xl transition-all mt-8 tracking-[0.2em] text-xs uppercase italic"
             >
-              {loading ? "PROCESSING..." : isLogin ? "AUTHENTICATE" : "GET STARTED"}
+              {loading ? "VERIFYING..." : isLogin ? "INITIATE LOGIN" : "CREATE VAULT"}
             </motion.button>
           </form>
 
-          <p className="text-gray-500 text-xs mt-10 uppercase tracking-widest font-bold">
-            {isLogin ? "New to the platform?" : "Part of the team?"}
+          <p className="text-gray-500 text-[10px] mt-10 uppercase tracking-widest font-bold">
+            {isLogin ? "No Access ID?" : "Already Authorized?"}
             <span
               onClick={() => setIsLogin(!isLogin)}
-              className="text-pink-400 cursor-pointer ml-3 hover:text-pink-300 transition-colors border-b border-pink-400/30"
+              className="text-cyan-400 cursor-pointer ml-3 hover:text-cyan-300 transition-colors border-b border-cyan-400/30"
             >
-              {isLogin ? "JOIN NOW" : "LOG IN"}
+              {isLogin ? "SIGN UP" : "LOG IN"}
             </span>
           </p>
         </div>
@@ -187,40 +188,41 @@ const Login = () => {
             transition={{ delay: 0.3, type: "spring" }}
             className="relative z-10 text-left w-full"
           >
-            <h1 className="text-[6rem] font-black text-white leading-[0.85] tracking-tighter mb-6">
-              Dream <br /> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400">
-                Bigger.
+            <h1 className="text-[6rem] font-black text-white leading-[0.85] tracking-tighter mb-6 uppercase italic">
+              Future <br /> 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
+                Ready.
               </span>
             </h1>
-            <p className="text-xl text-white/40 max-w-sm leading-relaxed font-medium">
-              Join 50,000+ creators building the future of the web.
+            <p className="text-xl text-white/40 max-w-sm leading-relaxed font-medium uppercase tracking-tight">
+              Unlock the next generation of e-commerce education.
             </p>
           </motion.div>
 
+          {/* ANIMATED SVG PATH */}
           <div className="absolute inset-0 opacity-20 pointer-events-none scale-150 rotate-12">
             <svg className="w-full h-full" viewBox="0 0 500 500">
-                <motion.path 
-                    d="M0,250 Q125,100 250,250 T500,250" 
-                    animate={{ 
-                      d: [
-                          "M0,250 Q125,100 250,250 T500,250",
-                          "M0,250 Q125,400 250,250 T500,250",
-                          "M0,250 Q125,100 250,250 T500,250"
-                      ] 
-                    }}
-                    transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                    fill="none" 
-                    stroke="url(#liquid-grad)" 
-                    strokeWidth="100"
-                />
-                <defs>
-                    <linearGradient id="liquid-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style={{ stopColor: "#ec4899" }} />
-                    <stop offset="50%" style={{ stopColor: "#8b5cf6" }} />
-                    <stop offset="100%" style={{ stopColor: "#3b82f6" }} />
-                    </linearGradient>
-                </defs>
+              <motion.path 
+                d={isLogin ? "M0,250 Q125,100 250,250 T500,250" : "M0,250 Q125,400 250,250 T500,250"} 
+                animate={{ 
+                  d: [
+                    "M0,250 Q125,100 250,250 T500,250",
+                    "M0,250 Q125,400 250,250 T500,250",
+                    "M0,250 Q125,100 250,250 T500,250"
+                  ] 
+                }}
+                transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                fill="none" 
+                stroke="url(#liquid-grad)" 
+                strokeWidth="100"
+              />
+              <defs>
+                <linearGradient id="liquid-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: "#00f2ff" }} />
+                  <stop offset="50%" style={{ stopColor: "#3b82f6" }} />
+                  <stop offset="100%" style={{ stopColor: "#8b5cf6" }} />
+                </linearGradient>
+              </defs>
             </svg>
           </div>
         </div>

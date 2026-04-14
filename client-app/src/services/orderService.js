@@ -1,32 +1,36 @@
-import { db, storage } from "../firebase";
+import { db } from "../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export const placeOrder = async (email, cart, total, screenshotFile, paymentId = null) => {
+export const placeOrder = async (email, cart, total, paymentId = "RAZORPAY") => {
   try {
-    let proofUrl = "";
-
-    // If manual (screenshot), upload file. If gateway, we use the paymentId.
-    if (screenshotFile) {
-      const storageRef = ref(storage, `screenshots/${Date.now()}`);
-      await uploadBytes(storageRef, screenshotFile);
-      proofUrl = await getDownloadURL(storageRef);
-    }
+    console.log("📡 [MISSION LOG] Initiating save for:", email);
+    
+    // Safety check: Don't save if cart is empty
+    if (!cart || cart.length === 0) throw new Error("Cart is empty");
 
     const orderData = {
       customerEmail: email,
-      items: cart.map(item => ({ name: item.name, url: item.url, price: item.price })),
+      items: cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        courseLink: item.courseLink || "No Link"
+      })),
       totalAmount: total,
-      screenshotUrl: proofUrl, 
-      razorpayId: paymentId, // Save the ID here
-      // 🔥 MAGIC LINE: If there's a paymentId, it's auto-verified!
-      status: paymentId ? "verified" : "pending", 
+      status: "paid",
+      paymentId: paymentId,
       createdAt: serverTimestamp(),
     };
 
+    // 🚀 THE SAVE COMMAND
     const docRef = await addDoc(collection(db, "orders"), orderData);
+    
+    console.log("✅ [MISSION LOG] Success! Order ID:", docRef.id);
     return { success: true, id: docRef.id };
+
   } catch (error) {
+    console.error("❌ [MISSION LOG] Firebase Write Failed:", error);
+    // This alert will tell you exactly what is wrong (e.g., Permission Denied)
+    alert("CRITICAL: Database sync failed! " + error.message);
     return { success: false, error: error.message };
   }
 };

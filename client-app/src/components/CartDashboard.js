@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, Plus, Minus, Mail, ShieldCheck, Download, CreditCard } from 'lucide-react';
 import { placeOrder } from "../services/orderService";
+import emailjs from "@emailjs/browser"; // ✅ ADDED THIS
 
-const CartDashboard = ({ setIsOpen, cart, updateQty, removeFromCart, userEmail }) => {
+const CartDashboard = ({ setIsOpen, cart, updateQty, removeFromCart, userEmail, clearCart }) => {
   const [loading, setLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [deliveryEmail, setDeliveryEmail] = useState(userEmail);
@@ -17,56 +18,71 @@ const CartDashboard = ({ setIsOpen, cart, updateQty, removeFromCart, userEmail }
 
     const options = {
       key: process.env.REACT_APP_RAZORPAY_KEY_ID, 
-      amount: total * 100, // Amount in paisa
+      amount: total * 100, 
       currency: "INR",
       name: "Thouseef Academy",
       description: "Vault Asset Access",
-      // 🔥 THIS FORCES UPI & ALL METHODS TO SHOW
-      config: {
-        display: {
-          blocks: {
-            methods: {
-              name: 'Select Payment Method',
-              instruments: [
-                { method: 'upi' },
-                { method: 'card' },
-                { method: 'netbanking' },
-                { method: 'wallet' }
-              ],
-            },
-          },
-          sequence: ['block.methods'],
-          preferences: { show_default_blocks: true },
-        },
-      },
       handler: async function (response) {
         setLoading(true);
-        
-        // Save to Database as 'verified' automatically
-        const result = await placeOrder(
-          deliveryEmail, 
-          cart, 
-          total, 
-          null, // No screenshot needed
-          response.razorpay_payment_id // The Digital Proof
-        );
+        console.log("💳 Payment Success. Synchronizing with Vault...");
 
-        if (result.success) {
-          setIsSubmitted(true);
-          // Auto-close after 5 seconds
-          setTimeout(() => {
-            setIsOpen(false);
-            setIsSubmitted(false);
-          }, 5000);
+        try {
+          // 1. BUNDLE LINKS FOR EMAIL
+          const allLinks = cart
+            .map((item) => `• ${item.name.toUpperCase()}\nAccess: ${item.courseLink || "Pending Verification"}`)
+            .join("\n\n");
+
+          // 2. SAVE TO FIREBASE
+          const result = await placeOrder(
+            deliveryEmail, 
+            cart, 
+            total, 
+            null, 
+            response.razorpay_payment_id 
+          );
+
+          if (result.success) {
+            console.log("✅ Order Saved. Dispatching Neural Assets to:", deliveryEmail);
+
+            // 3. DISPATCH EMAIL VIA EMAILJS
+            try {
+              await emailjs.send(
+                process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+                {
+                  to_email: deliveryEmail,           // Matches your Dashboard "To Email" box
+                  customer_name: deliveryEmail.split("@")[0].toUpperCase(),
+                  course_links: allLinks, 
+                  order_id: response.razorpay_payment_id,
+                  total_paid: `₹${total}`,
+                },
+                process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+              );
+              console.log("📧 Email Dispatched Successfully");
+            } catch (mailErr) {
+              console.error("❌ Email Delivery Error:", mailErr);
+            }
+
+            // 4. TRIGGER SUCCESS UI
+            setIsSubmitted(true);
+            if (clearCart) clearCart(); // ✅ Clears the cart items
+
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+              setIsOpen(false);
+              setIsSubmitted(false);
+              window.location.href = "/orders"; // Redirect to missions tab
+            }, 5000);
+          }
+        } catch (error) {
+          console.error("🔥 Critical Dashboard Error:", error);
+          alert("Payment verified, but a sync error occurred. ID: " + response.razorpay_payment_id);
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       },
-      prefill: {
-        email: deliveryEmail,
-      },
-      theme: {
-        color: "#00f2ff",
-      },
+      prefill: { email: deliveryEmail },
+      theme: { color: "#00f2ff" },
     };
 
     const rzp = new window.Razorpay(options);
@@ -103,9 +119,9 @@ const CartDashboard = ({ setIsOpen, cart, updateQty, removeFromCart, userEmail }
                 <motion.div key={item.id} layout className="p-6 bg-white/[0.03] border border-white/5 rounded-[3rem] flex items-center justify-between group hover:bg-white/[0.05] transition-all">
                   <div className="flex items-center gap-6">
                     <div className="w-16 h-16 rounded-[1.5rem] bg-[#00f2ff]/10 flex items-center justify-center text-[#00f2ff] group-hover:bg-[#00f2ff] group-hover:text-black transition-all">
-                      {item.icon || <Download size={20}/>}
+                      <Download size={20}/>
                     </div>
-                    <div>
+                    <div className="text-left">
                       <h4 className="text-white font-black uppercase text-sm tracking-tight">{item.name}</h4>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-[8px] text-white/30 uppercase font-black px-2 py-0.5 border border-white/10 rounded-full">{item.type || "Digital"}</span>
@@ -115,7 +131,7 @@ const CartDashboard = ({ setIsOpen, cart, updateQty, removeFromCart, userEmail }
                   </div>
 
                   <div className="flex items-center gap-8">
-                    <div className="flex items-center gap-4 bg-black/40 p-2.5 rounded-2xl border border-white/5">
+                    <div className="flex items-center gap-4 bg-black/40 p-2.5 rounded-2xl border border-white/5 text-left">
                       <button onClick={() => updateQty(item.id, -1)} className="text-white/20 hover:text-white transition-colors"><Minus size={14} /></button>
                       <span className="text-white font-black text-xs w-5 text-center">{item.qty}</span>
                       <button onClick={() => updateQty(item.id, 1)} className="text-white/20 hover:text-white transition-colors"><Plus size={14} /></button>
@@ -187,7 +203,7 @@ const CartDashboard = ({ setIsOpen, cart, updateQty, removeFromCart, userEmail }
                   Your transaction was successful.<br/><br/>
                   Check your inbox at:<br/>
                   <span className="text-cyan-400 font-bold">{deliveryEmail}</span><br/><br/>
-                  Links will arrive in <span className="text-white">5-10 minutes</span>.
+                  Assets have been deployed.
                 </p>
                 <div className="mt-8 text-[9px] text-white/20 font-black uppercase tracking-[0.5em] animate-pulse">Syncing Vault...</div>
              </motion.div>

@@ -15,28 +15,24 @@ import {
  * This retrieves BOTH 'pending' and 'verified' statuses so you can 
  * see them on your dashboard until they are finally 'delivered'.
  */
+
 export const getActiveOrders = async () => {
   try {
     const ordersRef = collection(db, "orders");
+    // ✅ FIX: Remove the 'where' filter so Admin sees ALL orders (Paid & Pending)
+    const q = query(ordersRef, orderBy("createdAt", "desc"));
     
-    // We use "in" to get multiple statuses at once
-    // We use "orderBy" to keep newest orders at the top
-    const q = query(
-      ordersRef, 
-      where("status", "in", ["pending", "verified"]),
-      orderBy("createdAt", "desc")
-    );
-
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
   } catch (error) {
-    console.error("Error fetching orders:", error);
-    return [];
+    console.error("Admin Data Sync Error:", error);
+    throw error;
   }
 };
+
 
 /**
  * 2. Approve Order
