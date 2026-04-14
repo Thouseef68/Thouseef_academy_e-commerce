@@ -10,6 +10,9 @@ import Refund from './pages/legal/Refund';
 import Privacy from './pages/legal/Privacy';
 import Terms from './pages/legal/Terms';
 import Contact from './pages/legal/Contact';
+// 1. Import your Orders page at the top
+import MyOrders from "./pages/Orders"; 
+
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -24,11 +27,13 @@ function App() {
             <Route path="/" element={<Home cart={cart} setCart={setCart} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/checkout" element={<Checkout cart={cart} />} />
+            <Route path="/orders" element={<MyOrders />} />
             <Route path="/admin-vault-007" element={<AdminDashboard />} />
             <Route path="/refund" element={<Refund />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/contact" element={<Contact />} />
+            
           </Routes>
         </main>
 

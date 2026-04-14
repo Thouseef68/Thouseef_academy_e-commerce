@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Eye, EyeOff } from "lucide-react";
-
+// Inside your Login.js after a successful response:
+localStorage.setItem("userEmail", response.user.email);
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
