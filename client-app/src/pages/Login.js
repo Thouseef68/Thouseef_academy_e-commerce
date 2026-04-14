@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom"; // 1. Added for navigation
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate(); // Initialize navigator
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -14,34 +14,45 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
+    
+    // --- DIAGNOSTIC CHECKPOINTS ---
+    alert("🟢 Checkpoint 1: handleSubmit started!");
+    
+    // Clear old session for a fresh start
+    localStorage.clear();
     setLoading(true);
-    const url = isLogin ? "/login" : "/register";
+
+    const urlPath = isLogin ? "/login" : "/register";
+    const apiEndpoint = `https://thouseef-academy-e-commerce.onrender.com/api/auth${urlPath}`;
+
+    alert("🟡 Checkpoint 2: Calling API at: " + apiEndpoint);
 
     try {
-      const res = await fetch(`https://thouseef-academy-e-commerce.onrender.com/api/auth${url}`, {
+      const res = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
+      alert("🔵 Checkpoint 3: Server responded with status: " + res.status);
+
       const data = await res.json();
       
       if (res.ok) {
-        // ✅ CRITICAL FIX: Save user session to Memory
-        // Your backend returns data.user (for login) or the object itself
+        alert("✅ Checkpoint 4: SUCCESS! User data received.");
+        
+        // Save user email to localStorage for orders/tracking
         const userEmail = data.user ? data.user.email : form.email;
         localStorage.setItem("userEmail", userEmail);
         
         alert(isLogin ? "Login Successful!" : "Registration Successful!");
-        
-        // 🚀 AUTOMATION: Send them to the Home or Checkout page immediately
         navigate("/"); 
       } else {
-        alert(data.msg || data.message || "Action failed");
+        alert("❌ Checkpoint 5: SERVER REJECTED DATA - " + (data.msg || data.message || "Unknown error"));
       }
     } catch (err) {
-      console.error(err);
-      alert("Connection error. Is your backend running?");
+      alert("🛑 Checkpoint 6: CONNECTION FAILED - " + err.message);
+      console.error("Critical Connection Error:", err);
     } finally {
       setLoading(false);
     }
@@ -136,10 +147,11 @@ const Login = () => {
             </div>
 
             <motion.button
+              type="submit" // 🚀 CRITICAL FIX: Ensures the form actually submits
               animate={floatAnim(0.5)}
               whileHover={{ 
                 scale: 1.05, 
-                y: -5, // Tamed the jump slightly
+                y: -5,
                 boxShadow: "0px 20px 40px rgba(236, 72, 153, 0.4)"
               }}
               whileTap={{ scale: 0.95 }}
