@@ -13,6 +13,7 @@ const Login = () => {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
+    console.log("🚀 handleSubmit RUNNING");
     if (e) e.preventDefault();
     
     // --- DIAGNOSTIC CHECKPOINTS ---
@@ -100,7 +101,7 @@ const Login = () => {
             {isLogin ? "Welcome Back" : "Create Account"}
           </h2>
 
-          <form onSubmit={handleSubmit} className="w-full space-y-5">
+          <form onSubmit={(e) => e.preventDefault()} className="w-full space-y-5">
             <AnimatePresence mode="wait">
               {!isLogin && (
                 <motion.input
@@ -147,9 +148,12 @@ const Login = () => {
               </button>
             </div>
 
-          <motion.button
-            type="button"
-            onClick={handleSubmit} // 🚀 CRITICAL FIX: Ensures the form actually submits
+            <motion.button
+              type="button"
+              onClick={(e) => {
+                console.log("🔥 BUTTON CLICKED");
+                handleSubmit(e);
+              }} // 🚀 CRITICAL FIX: Ensures the form actually submits
               animate={floatAnim(0.5)}
               whileHover={{ 
                 scale: 1.05, 
