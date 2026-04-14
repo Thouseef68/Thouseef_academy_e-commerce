@@ -16,13 +16,14 @@ const Login = () => {
     if (e) e.preventDefault();
     
     // --- DIAGNOSTIC CHECKPOINTS ---
-    alert("🟢 Checkpoint 1: handleSubmit started!");
+    console.log("✅ FORM SUBMIT TRIGGERED", form);
     
     // Clear old session for a fresh start
     localStorage.clear();
     setLoading(true);
 
     const urlPath = isLogin ? "/login" : "/register";
+    console.log("MODE:", isLogin ? "LOGIN" : "REGISTER");
     const apiEndpoint = `https://thouseef-academy-e-commerce.onrender.com/api/auth${urlPath}`;
 
     alert("🟡 Checkpoint 2: Calling API at: " + apiEndpoint);
@@ -146,8 +147,9 @@ const Login = () => {
               </button>
             </div>
 
-            <motion.button
-              type="submit" // 🚀 CRITICAL FIX: Ensures the form actually submits
+          <motion.button
+            type="button"
+            onClick={handleSubmit} // 🚀 CRITICAL FIX: Ensures the form actually submits
               animate={floatAnim(0.5)}
               whileHover={{ 
                 scale: 1.05, 
