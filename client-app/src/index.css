@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  /* Fixed Purple to Neon Blue Gradient */
+  background: linear-gradient(135deg, #7C3AED 0%, #00D4FF 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Texture Grain for that high-end look */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  
+  opacity: 0.05;
+  z-index: 10;
+  pointer-events: none;
+}
