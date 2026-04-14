@@ -16,7 +16,7 @@ const Login = () => {
     const url = isLogin ? "/login" : "/register";
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth${url}`, {
+      const res = await fetch(`https://thouseef-academy-e-commerce.onrender.com/api/auth${url}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

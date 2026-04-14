@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api"
+  baseURL: "https://thouseef-academy-e-commerce.onrender.com/api"
 });
 
 export default API;
