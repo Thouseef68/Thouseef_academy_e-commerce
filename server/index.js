@@ -9,8 +9,6 @@ const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 
 const app = express();
-const orderRoutes = require("./routes/orderRoutes"); // This is correct for SERVER
-app.use("/api/orders", orderRoutes);
 // ✅ MIDDLEWARE
 app.use(cors());
 app.use(express.json());
