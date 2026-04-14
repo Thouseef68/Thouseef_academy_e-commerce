@@ -20,7 +20,7 @@ const Login = () => {
     console.log("✅ FORM SUBMIT TRIGGERED", form);
     
     // Clear old session for a fresh start
-    localStorage.clear();
+    
     setLoading(true);
 
     const urlPath = isLogin ? "/login" : "/register";
