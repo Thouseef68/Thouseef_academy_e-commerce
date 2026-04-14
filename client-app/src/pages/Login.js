@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Eye, EyeOff } from "lucide-react";
-// Inside your Login.js after a successful response:
-localStorage.setItem("userEmail", response.user.email);
+import { useNavigate } from "react-router-dom"; // 1. Added for navigation
+
 const Login = () => {
+  const navigate = useNavigate(); // Initialize navigator
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -24,8 +25,17 @@ const Login = () => {
       });
 
       const data = await res.json();
+      
       if (res.ok) {
+        // ✅ CRITICAL FIX: Save user session to Memory
+        // Your backend returns data.user (for login) or the object itself
+        const userEmail = data.user ? data.user.email : form.email;
+        localStorage.setItem("userEmail", userEmail);
+        
         alert(isLogin ? "Login Successful!" : "Registration Successful!");
+        
+        // 🚀 AUTOMATION: Send them to the Home or Checkout page immediately
+        navigate("/"); 
       } else {
         alert(data.msg || data.message || "Action failed");
       }
@@ -50,13 +60,13 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f172a] font-sans overflow-hidden p-4 relative">
       
-      {/* --- BACKGROUND ELEMENTS (GLOWS) --- */}
+      {/* BACKGROUND ELEMENTS (GLOWS) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-15%] left-[-10%] w-[60%] h-[70%] bg-purple-600/15 blur-[140px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-15%] right-[-10%] w-[60%] h-[70%] bg-blue-600/15 blur-[140px] rounded-full animate-pulse" />
       </div>
 
-      {/* --- MAIN LOGIN CARD --- */}
+      {/* MAIN LOGIN CARD */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -119,7 +129,7 @@ const Login = () => {
               <button 
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-6 top-4.5 text-gray-500 hover:text-white transition-colors"
+                className="absolute right-6 top-[18px] text-gray-500 hover:text-white transition-colors"
               >
                 {showPassword ? <EyeOff size={22}/> : <Eye size={22}/>}
               </button>
@@ -129,7 +139,7 @@ const Login = () => {
               animate={floatAnim(0.5)}
               whileHover={{ 
                 scale: 1.05, 
-                y: -15,
+                y: -5, // Tamed the jump slightly
                 boxShadow: "0px 20px 40px rgba(236, 72, 153, 0.4)"
               }}
               whileTap={{ scale: 0.95 }}
@@ -170,7 +180,6 @@ const Login = () => {
             </p>
           </motion.div>
 
-          {/* Liquid Wave SVGs */}
           <div className="absolute inset-0 opacity-20 pointer-events-none scale-150 rotate-12">
             <svg className="w-full h-full" viewBox="0 0 500 500">
                 <motion.path 
