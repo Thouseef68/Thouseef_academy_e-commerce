@@ -18,16 +18,16 @@ const ProductDashboard = ({ setIsOpen, onAddToCart, onToggleWishlist, wishlist =
       subtitle: "Tactical blueprints for high-tier engineering roles",
       color: "from-blue-600 to-cyan-400",
       items: [
-        { id: "r1", name: "AI & GenAI Engineer", price: 999, icon: <Cpu />, rating: 5.0, reviews: 450, courseLink: "https://drive.google.com/file/d/1ISexBgUN7eTG2Am6iGrrIvDQ3TDVVcAG/view?usp=sharing" },
-        { id: "r2", name: "Modern Data Engineer", price: 899, icon: <Database />, rating: 4.8, reviews: 210, courseLink: "https://drive.google.com/file/d/1YYv9lm2CGd1HDQGYjbBfpZp_MX0eUWvB/view?usp=sharing" },
-        { id: "r3", name: "Data Analytics Pro", price: 799, icon: <Search />, rating: 4.9, reviews: 180, courseLink: "https://drive.google.com/file/d/1eCcgUzF7W07F3BWPxfAKVTg46Ige0sef/view?usp=sharing" },
-        { id: "r4", name: "Frontend (React/Next)", price: 699, icon: <Layout />, rating: 4.9, reviews: 320, courseLink: "https://drive.google.com/file/d/1qXGV_UxPZmz7ZnKvAYsJXsVzB9vOgUdW/view?usp=sharing" },
-        { id: "r5", name: "Backend (Node/Python)", price: 699, icon: <Terminal />, rating: 4.8, reviews: 140, courseLink: "https://drive.google.com/file/d/11NgTeuhg49_P01oqZg7UcQv8D5Y7RX3W/view?usp=sharing" },
-        { id: "r6", name: "Python Mastery", price: 599, icon: <Code />, rating: 5.0, reviews: 560, courseLink: "https://drive.google.com/file/d/1fUNRv3AwX8T2K7F9vKXNj_E9fhiLwOZN/view?usp=sharing" },
-        { id: "r7", name: "SQL & DB Mastery", price: 499, icon: <Layers />, rating: 4.7, reviews: 88, courseLink: "https://drive.google.com/file/d/1FBdjjsnN9BW8TWuLcT_te3ZbFHzF2e9o/view?usp=sharing" },
-        { id: "r8", name: "Cyber Security", price: 899, icon: <Shield />, rating: 4.9, reviews: 112, courseLink: "https://drive.google.com/file/d/1r5R6DA6zp-yBhk6pHfVPNtpEGDvfvI7o/view?usp=sharing" },
-        { id: "r9", name: "Full Stack Product", price: 999, icon: <Zap />, rating: 4.9, reviews: 410, courseLink: "https://drive.google.com/file/d/1XFXnMOuZq1bWCwbPl3IeJGtLzcd31UDk/view?usp=sharing" },
-        { id: "r10", name: "Cloud & DevOps", price: 899, icon: <Activity />, rating: 4.8, reviews: 94, courseLink: "https://drive.google.com/file/d/1zwHEl_9rFJ-hTaiI_CZAr8BBtr0KN6Oh/view?usp=sharing" },
+        { id: "r1", name: "AI & GenAI Engineer", price: 15, icon: <Cpu />, rating: 5.0, reviews: 450, courseLink: "https://drive.google.com/file/d/1ISexBgUN7eTG2Am6iGrrIvDQ3TDVVcAG/view?usp=sharing" },
+        { id: "r2", name: "Modern Data Engineer", price: 11, icon: <Database />, rating: 4.8, reviews: 210, courseLink: "https://drive.google.com/file/d/1YYv9lm2CGd1HDQGYjbBfpZp_MX0eUWvB/view?usp=sharing" },
+        { id: "r3", name: "Data Analytics Pro", price: 16, icon: <Search />, rating: 4.9, reviews: 180, courseLink: "https://drive.google.com/file/d/1eCcgUzF7W07F3BWPxfAKVTg46Ige0sef/view?usp=sharing" },
+        { id: "r4", name: "Frontend (React/Next)", price: 16, icon: <Layout />, rating: 4.9, reviews: 320, courseLink: "https://drive.google.com/file/d/1qXGV_UxPZmz7ZnKvAYsJXsVzB9vOgUdW/view?usp=sharing" },
+        { id: "r5", name: "Backend (Node/Python)", price: 16, icon: <Terminal />, rating: 4.8, reviews: 140, courseLink: "https://drive.google.com/file/d/11NgTeuhg49_P01oqZg7UcQv8D5Y7RX3W/view?usp=sharing" },
+        { id: "r6", name: "Python Mastery", price: 20, icon: <Code />, rating: 5.0, reviews: 560, courseLink: "https://drive.google.com/file/d/1fUNRv3AwX8T2K7F9vKXNj_E9fhiLwOZN/view?usp=sharing" },
+        { id: "r7", name: "SQL & DB Mastery", price: 10, icon: <Layers />, rating: 4.7, reviews: 88, courseLink: "https://drive.google.com/file/d/1FBdjjsnN9BW8TWuLcT_te3ZbFHzF2e9o/view?usp=sharing" },
+        { id: "r8", name: "Cyber Security", price: 10, icon: <Shield />, rating: 4.9, reviews: 112, courseLink: "https://drive.google.com/file/d/1r5R6DA6zp-yBhk6pHfVPNtpEGDvfvI7o/view?usp=sharing" },
+        { id: "r9", name: "Full Stack Product", price: 12, icon: <Zap />, rating: 4.9, reviews: 410, courseLink: "https://drive.google.com/file/d/1XFXnMOuZq1bWCwbPl3IeJGtLzcd31UDk/view?usp=sharing" },
+        { id: "r10", name: "Cloud & DevOps", price: 15, icon: <Activity />, rating: 4.8, reviews: 94, courseLink: "https://drive.google.com/file/d/1zwHEl_9rFJ-hTaiI_CZAr8BBtr0KN6Oh/view?usp=sharing" },
       ]
     },
     {
@@ -36,11 +36,11 @@ const ProductDashboard = ({ setIsOpen, onAddToCart, onToggleWishlist, wishlist =
       subtitle: "Verified certifications & deep-dive modules",
       color: "from-emerald-500 to-teal-400",
       items: [
-        { id: "c1", name: "Google Data Analytics", price: 1499, icon: <Globe />, rating: 4.8, reviews: "2.4k", courseLink: "https://www.coursera.org/professional-certificates/google-data-analytics" },
-        { id: "c2", name: "Meta Front-End Dev", price: 1299, icon: <Layout />, rating: 4.9, reviews: "1.8k", courseLink: "https://www.coursera.org/professional-certificates/meta-front-end-developer" },
-        { id: "c3", name: "Harvard CS50 Mastery", price: 999, icon: <Terminal />, rating: 5.0, reviews: "10k+", courseLink: "https://www.edx.org/course/introduction-computer-science-harvard-cs50x" },
-        { id: "c4", name: "IBM Data Science", price: 1299, icon: <Database />, rating: 4.7, reviews: "1.2k", courseLink: "https://www.coursera.org/professional-certificates/ibm-data-science" },
-        { id: "c5", name: "AI For Everyone", price: 799, icon: <BrainCircuit />, rating: 5.0, reviews: "5k+", courseLink: "https://www.coursera.org/learn/ai-for-everyone" },
+        { id: "c1", name: "Google Data Analytics", price: 15, icon: <Globe />, rating: 4.8, reviews: "2.4k", courseLink: "https://www.coursera.org/professional-certificates/google-data-analytics" },
+        { id: "c2", name: "Meta Front-End Dev", price: 16, icon: <Layout />, rating: 4.9, reviews: "1.8k", courseLink: "https://www.coursera.org/professional-certificates/meta-front-end-developer" },
+        { id: "c3", name: "Harvard CS50 Mastery", price: 20, icon: <Terminal />, rating: 5.0, reviews: "10k+", courseLink: "https://www.edx.org/course/introduction-computer-science-harvard-cs50x" },
+        { id: "c4", name: "IBM Data Science", price: 12, icon: <Database />, rating: 4.7, reviews: "1.2k", courseLink: "https://www.coursera.org/professional-certificates/ibm-data-science" },
+        { id: "c5", name: "AI For Everyone", price: 10, icon: <BrainCircuit />, rating: 5.0, reviews: "5k+", courseLink: "https://www.coursera.org/learn/ai-for-everyone" },
       ]
     },
     {
@@ -49,11 +49,11 @@ const ProductDashboard = ({ setIsOpen, onAddToCart, onToggleWishlist, wishlist =
       subtitle: "High-end AI tools & essential cheat sheets",
       color: "from-purple-600 to-pink-500",
       items: [
-        { id: "ai_tool", name: "AI Resume Intelligence", price: 499, icon: <Activity />, rating: 4.9, reviews: 890, courseLink: "https://ai-agent-f12q.onrender.com/" },
-        { id: "vault", name: "AI Master Prompt Vault", price: 399, icon: <MessageSquare />, rating: 4.8, reviews: 156, courseLink: "https://drive.google.com/file/d/1n-zcLr3vryt8IJm18zAvFvleOXCHh_3Z/view?usp=sharing" },
-        { id: "email", name: "Gold Email Pack", price: 299, icon: <Mail />, rating: 4.9, reviews: 230, courseLink: "https://drive.google.com/file/d/1LukPfgwrJ8UIlPM_rL4aZUvHhYex_rI1/view?usp=sharing" },
-        { id: "linkedin", name: "LinkedIn 5-Star Blueprint", price: 499, icon: <Briefcase />, rating: 4.7, reviews: 145, courseLink: "https://drive.google.com/file/d/1E7_AilcvQ2MwGnsLhuv-sFT0kmRKxUdH/view?usp=sharing" },
-        { id: "cheat", name: "Master Syntax (3-in-1)", price: 399, icon: <ListChecks />, rating: 5.0, reviews: 540, courseLink: "https://drive.google.com/file/d/1xK0XQ1wPWaHiNTXJGDTgB81mATALjtK_/view?usp=sharing" },
+        { id: "ai_tool", name: "AI Resume Intelligence", price: 10, icon: <Activity />, rating: 4.9, reviews: 890, courseLink: "https://ai-agent-f12q.onrender.com/" },
+        { id: "vault", name: "AI Master Prompt Vault", price: 10, icon: <MessageSquare />, rating: 4.8, reviews: 156, courseLink: "https://drive.google.com/file/d/1n-zcLr3vryt8IJm18zAvFvleOXCHh_3Z/view?usp=sharing" },
+        { id: "email", name: "Gold Email Pack", price: 11, icon: <Mail />, rating: 4.9, reviews: 230, courseLink: "https://drive.google.com/file/d/1LukPfgwrJ8UIlPM_rL4aZUvHhYex_rI1/view?usp=sharing" },
+        { id: "linkedin", name: "LinkedIn 5-Star Blueprint", price: 12, icon: <Briefcase />, rating: 4.7, reviews: 145, courseLink: "https://drive.google.com/file/d/1E7_AilcvQ2MwGnsLhuv-sFT0kmRKxUdH/view?usp=sharing" },
+        { id: "cheat", name: "Master Syntax (3-in-1)", price: 12, icon: <ListChecks />, rating: 5.0, reviews: 540, courseLink: "https://drive.google.com/file/d/1xK0XQ1wPWaHiNTXJGDTgB81mATALjtK_/view?usp=sharing" },
       ]
     }
   ];
